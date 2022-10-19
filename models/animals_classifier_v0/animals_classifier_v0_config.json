@@ -1,0 +1,14 @@
+{
+    "model_name": "animals_classifier_v0",
+    "output_classes": [
+        "cat",
+        "dog",
+        "bird"
+    ],
+    "image_preproc_config": {
+    	"input_shape": [224, 224, 3],
+    	"normalization_factor": 255 
+    },
+    "creation_time": "2022-04-26 10:45:30",
+    "comments": "Image classification model for animals. Version v0."
+}
