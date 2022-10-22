@@ -10,6 +10,7 @@ from numpy import ndarray
 from modules.image_preprocessor.img_parser import ImageParser
 from modules.image_preprocessor.img_preprocessor import ImagePreprocessor
 from modules.output_preprocessor.output_preproc import OutputProcessor, Prediction
+from services.utils import check_if_file_existis
 
 
 class PredictionService:
@@ -17,9 +18,15 @@ class PredictionService:
     def __init__(self, model_name: str):
         models_base_path = os.path.join(pathlib.Path(__file__).parent.parent.absolute(), "models")
         self.model_name = model_name
-        self.model = ks.models.load_model(models_base_path + f"/{model_name}/{model_name}.hdf5")
+        model_hdf5_path = os.path.join(models_base_path, model_name, f"{model_name}.hdf5")
+        model_config_path = os.path.join(models_base_path, model_name, f"{model_name}_config.json")
 
-        with open(os.path.join(models_base_path, model_name, f"{model_name}_config.json"), 'r') as jfile:
+        check_if_file_existis(model_hdf5_path)
+        check_if_file_existis(model_config_path)
+
+        self.model = ks.models.load_model(model_hdf5_path)
+
+        with open(model_config_path, 'r') as jfile:
             config = json.load(jfile)
 
         self.image_preprocessor = ImagePreprocessor(config["image_preproc_config"]["input_shape"],

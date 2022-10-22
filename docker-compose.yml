@@ -1,0 +1,11 @@
+version: '3'
+services:
+    model-serving-api:
+        container_name: model-serving-api
+        image: model-serving-api:latest
+        ports:
+            - 5050:5050
+        environment:
+            - X_API_KEY=${X_API_KEY}
+        volumes:
+            - ./models:/app/models
