@@ -70,8 +70,7 @@ class PredictionService:
 
         for img, softmax in zip(request_body, predictions_softmax):
             p = Prediction(image_id=img["image_id"],
-                           scores=softmax,
-                           base64_img=img["img_base64"])
+                           scores=softmax)
             pred_list.append(p)
         return pred_list
 
@@ -79,13 +78,11 @@ class PredictionService:
         return list(map(self.output_processor.do, preds))
 
     def _ok_response(self, pred_list: List[Prediction]) -> Dict[str, Any]:
-        res = []
-        for r in pred_list:
-            res.append(r.to_json())
+
         return {
             "code": 200,
             "response": {
                 "model": self.model_name,
-                "results": res
+                "results": [res.to_json for res in pred_list]
             }
         }

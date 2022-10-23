@@ -8,9 +8,7 @@ import numpy as np
 class Prediction:
     image_id: int
     scores: List[float]
-    base64_img: str
     label_str: Optional[str] = None
-    max_score_inx: Optional[int] = None
 
     def __post_init__(self):
         inx = int(np.argmax(self.scores))
