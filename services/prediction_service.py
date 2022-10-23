@@ -83,6 +83,6 @@ class PredictionService:
             "code": 200,
             "response": {
                 "model": self.model_name,
-                "results": [res.to_json for res in pred_list]
+                "results": [res.to_json() for res in pred_list]
             }
         }
