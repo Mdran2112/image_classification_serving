@@ -34,8 +34,10 @@ class PredictionService:
         with open(model_config_path, 'r') as jfile:
             config = json.load(jfile)
 
-        self.image_preprocessor = ImagePreprocessorFactory.get(img_preproc_type, **config["image_preproc_config"])
-        self.output_processor = OutputPostprocessorFactory.get(output_postproc_type, **config["output_config"])
+        self.image_preprocessor = ImagePreprocessorFactory.get(config["img_preproc_type"],
+                                                               **config["image_preproc_config"])
+        self.output_processor = OutputPostprocessorFactory.get(config["output_postproc_type"],
+                                                               **config["output_config"])
 
         self.image_parser = ImageParser()
 

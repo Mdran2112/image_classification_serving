@@ -1,5 +1,11 @@
 {
     "model_name": "animals_classifier_v0",
+    "img_preproc_type": "normalize_and_pad",
+    "output_postproc_type": "argmax",
+    "image_preproc_config": {
+    	"input_shape": [224, 224, 3],
+    	"normalization_factor": 255 
+    },
     "output_config": {
         "output_classes": [
             "cat",
@@ -7,10 +13,6 @@
             "bird"
         ]
     },
-    "image_preproc_config": {
-    	"input_shape": [224, 224, 3],
-    	"normalization_factor": 255 
-    },
     "creation_time": "2022-04-26 10:45:30",
-    "comments": "Image classification model for animals. Version v0."
+    "comments": "Demo example of image classification model for animals. Version v0."
 }
