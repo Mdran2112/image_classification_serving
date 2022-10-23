@@ -9,9 +9,8 @@ from numpy import ndarray
 
 from modules.image_preprocessor.img_parser import ImageParser
 from modules.image_preprocessor.img_preproc_factory import ImagePreprocessorFactory
-from modules.image_preprocessor.img_preprocessor import NormAndPaddingImagePreprocessor
 from modules.output_postprocessor.output_postproc_factory import OutputPostprocessorFactory
-from modules.output_postprocessor.output_preproc import ArgMaxOutputPostprocessor, Prediction
+from modules.output_postprocessor.output_preproc import Prediction
 from services.utils import check_if_file_existis
 
 
