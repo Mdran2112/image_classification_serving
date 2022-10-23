@@ -20,7 +20,7 @@ Make predictions for a batch of images, using am image classification model. Req
 ```
 
 
-#### PUT   /classifier/prediction-service/<model-name>
+#### PUT   /classifier/prediction-service/{new-model}
 It used to load/change the classification model package and configure the prediction pipeline according the model configuration. 
 
 
