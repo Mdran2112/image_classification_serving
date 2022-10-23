@@ -17,9 +17,7 @@ from services.utils import check_if_file_existis
 
 class PredictionService:
 
-    def __init__(self, model_name: str,
-                 img_preproc_type: str = "normalize_and_pad",
-                 output_postproc_type: str = "argamx") -> None:
+    def __init__(self, model_name: str) -> None:
 
         models_base_path = os.path.join(pathlib.Path(__file__).parent.parent.absolute(), "models")
         self.model_name = model_name
@@ -33,6 +31,7 @@ class PredictionService:
 
         with open(model_config_path, 'r') as jfile:
             config = json.load(jfile)
+            jfile.close()
 
         self.image_preprocessor = ImagePreprocessorFactory.get(config["img_preproc_type"],
                                                                **config["image_preproc_config"])
