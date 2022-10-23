@@ -1,10 +1,12 @@
 {
     "model_name": "animals_classifier_v0",
-    "output_classes": [
-        "cat",
-        "dog",
-        "bird"
-    ],
+    "output_config": {
+        "output_classes": [
+            "cat",
+            "dog",
+            "bird"
+        ]
+    },
     "image_preproc_config": {
     	"input_shape": [224, 224, 3],
     	"normalization_factor": 255 

@@ -8,14 +8,19 @@ import tensorflow.keras as ks
 from numpy import ndarray
 
 from modules.image_preprocessor.img_parser import ImageParser
-from modules.image_preprocessor.img_preprocessor import ImagePreprocessor
-from modules.output_preprocessor.output_preproc import OutputProcessor, Prediction
+from modules.image_preprocessor.img_preproc_factory import ImagePreprocessorFactory
+from modules.image_preprocessor.img_preprocessor import NormAndPaddingImagePreprocessor
+from modules.output_postprocessor.output_postproc_factory import OutputPostprocessorFactory
+from modules.output_postprocessor.output_preproc import ArgMaxOutputPostprocessor, Prediction
 from services.utils import check_if_file_existis
 
 
 class PredictionService:
 
-    def __init__(self, model_name: str):
+    def __init__(self, model_name: str,
+                 img_preproc_type: str = "normalize_and_pad",
+                 output_postproc_type: str = "argamx") -> None:
+
         models_base_path = os.path.join(pathlib.Path(__file__).parent.parent.absolute(), "models")
         self.model_name = model_name
         model_hdf5_path = os.path.join(models_base_path, model_name, f"{model_name}.hdf5")
@@ -29,9 +34,9 @@ class PredictionService:
         with open(model_config_path, 'r') as jfile:
             config = json.load(jfile)
 
-        self.image_preprocessor = ImagePreprocessor(config["image_preproc_config"]["input_shape"],
-                                                    config["image_preproc_config"]["normalization_factor"])
-        self.output_processor = OutputProcessor(config["output_classes"])
+        self.image_preprocessor = ImagePreprocessorFactory.get(img_preproc_type, **config["image_preproc_config"])
+        self.output_processor = OutputPostprocessorFactory.get(output_postproc_type, **config["output_config"])
+
         self.image_parser = ImageParser()
 
     def predict(self, request_body: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -84,4 +89,3 @@ class PredictionService:
                 "results": res
             }
         }
-

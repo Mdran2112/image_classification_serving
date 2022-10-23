@@ -4,24 +4,37 @@ from typing import Tuple, Callable, List
 import cv2
 import numpy as np
 
-@dataclass
+
 class ImagePreprocessor:
-    input_model_shape: Tuple[int, int, int]
-    norm_factor: int = 255
+
+    def __init__(self, **kwargs):
+        self.preproc_list: List[Callable[[np.ndarray], np.ndarray]] = []
+
+    def do(self, img: np.ndarray) -> np.ndarray:
+        for preproc in self.preproc_list:
+            img = preproc(img)
+        return img
+
+
+@dataclass
+class NormAndPaddingImagePreprocessor(ImagePreprocessor):
+    input_shape: Tuple[int, int, int]
+    normalization_factor: int = 255
 
     def __post_init__(self):
+        super().__init__()
         self.preproc_list: List[Callable[[np.ndarray], np.ndarray]] = [
             self._add_padding,
             self._normalize
         ]
 
     def _normalize(self, img: np.ndarray) -> np.ndarray:
-        return img / self.norm_factor
+        return img / self.normalization_factor
 
     def _add_padding(self, img: np.ndarray) -> np.ndarray:
         height, width, _ = img.shape
 
-        new_width, new_height = self.input_model_shape[1], self.input_model_shape[0]
+        new_width, new_height = self.input_shape[1], self.input_shape[0]
 
         left = (new_width - width) / 2
         top = (new_height - height) / 2
@@ -32,8 +45,6 @@ class ImagePreprocessor:
                                 value=[0, 0, 0])
         return im.astype("uint8")
 
-    def do(self, img: np.ndarray) -> np.ndarray:
-        for preproc in self.preproc_list:
-            img = preproc(img)
-        return img
 
+class NoPreproc(ImagePreprocessor):
+    ...

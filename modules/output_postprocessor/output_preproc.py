@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from dataclasses import dataclass
 from typing import List, Optional, Dict, Any
 import numpy as np
@@ -23,15 +24,29 @@ class Prediction:
             "label": self.label_str
         }
 
+###############################################################################
 
-@dataclass
-class OutputProcessor:
-    output_classes: List[str]
+class OutputPostprocessor:
 
+    def __init__(self, **kwargs):
+        ...
+
+    @abstractmethod
     def _map_label(self, pred: Prediction) -> Prediction:
-        pred.label_str = self.output_classes[pred.max_score_inx]
-        return pred
+        ...
 
     def do(self, pred: Prediction) -> Prediction:
         pred = self._map_label(pred)
         return pred
+
+
+@dataclass
+class ArgMaxOutputPostprocessor(OutputPostprocessor):
+    output_classes: List[str]
+
+    def _map_label(self, pred: Prediction) -> Prediction:
+        """Label mapping using arg max criteria over softmax outputs."""
+        pred.label_str = self.output_classes[pred.max_score_inx]
+        return pred
+
+
