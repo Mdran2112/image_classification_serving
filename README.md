@@ -3,13 +3,13 @@ This is an example of REST API, made with Python and FastAPI, that can be used t
 The API has two endpoints: 
 
 #### POST  /classifier/predictions
-Make predictions for a batch of images, using am image classification model. Requires a json body with this schema:
+Make predictions for a batch of images, using an image classification model. Requires a json body with this schema:
 ```
 {
    "images": [
       {
          "image_id": 0,    // image identification [int]
-         "img_base64": ...    // string of encoded image in base64 [int]
+         "img_base64": ...    // string of encoded image in base64 [str]
       },
       {
          "image_id": 1,
@@ -21,38 +21,37 @@ Make predictions for a batch of images, using am image classification model. Req
 
 
 #### PUT   /classifier/prediction-service/{new-model}
-It used to load/change the classification model package and configure the prediction pipeline according the model configuration. 
+It is used to load/change the classification model package and configure the prediction pipeline according to the model configuration file (see Model package). 
 
 
 ## Model package
 
-A model package is an object that is consumed by the prediction service for classification. 
+A model package represents the agrupation of several files, consumed by the prediction service for classification. 
 In the model/ directory, there is an example of how a "model package" should be; it consists in:
 * hdf5 model file (<model_name>.hdf5)
 * json configuration file (<model_name>_config.json)
 
-Those files have to be localted inside a folder named as the model itself:
+Those files have to be localted inside a folder named as the model itself. For example:
 ```
-<model_name>/
-            |__<model_name>.hdf5
-            |__ <model_name>_config.json
+my_model/
+        |__my_model.hdf5
+        |__ my_model_config.json
 ```
- The folder <model_name>/ will be inside the docker models volume (see docker-compose.yml).
+ Note that the json config filename needs the sufix ```_config```.
+ The folder ```my_model/``` will be inside the docker ```models``` volume (see docker-compose.yml).
 
 ## Prediction Service
 
-The Prediction Service uses the model json configuration file in order to configure how image preprocessing and output processing will be. With that information, 
-it creates a prediction pipeline (parsing images + preprocessing + predict + output processing) and delivers a response with the results.
+The Prediction Service uses the model json configuration file in order to configure how image preprocessing and output processing will be. With that information, it creates a prediction pipeline (decoding and parsing images + preprocessing + predict + output processing) and delivers a response with the results.
             
 ## Build & deploy
 
 This repository has a Dockerfile for building a docker image. By executing ```docker_build.sh```, a docker image will be created.
-The deploy can be made by using the docker-compose.yml file. The ```X_API_KEY``` environment variable is for authentication when using the API.
-The model packages (folders with models and json configs) have to be inside the models/ volume.
+The deploy can be made by using the ```docker-compose.yml``` file. The ```X_API_KEY``` environment variable is for authentication when using the API (see the example in the demo jupyter notebook.)
+The model packages (folders with models and json configs) have to be inside the ```models/``` volume.
 
 ## Demo notebook.
 
-Inside the demo/ directory there is a Jupyter notebook, which generates a batch of images (encoded in base64) and send requests to the API in order
-to get predictions. The demo loads an example classification model (with pretty bad accuracy... but it is useful for testing.) 
-You can test the endpoints using that notebook as an example.
+Inside the ```demo/``` directory there is a Jupyter notebook. The first cell (after imports) generates a batch of images transformed to base64 and builds an input json body. Then, send a request to ```/classifier/prediction-service/{new-model}``` in order loads the example classification model (it has a pretty bad accuracy... but it is useful for testing) with its pipeline configuration. Finally send a request to ```/classifier/predictions``` with the json body.
+
 
