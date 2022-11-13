@@ -1,5 +1,5 @@
 # image_classification_serving
-This is an example of REST API, made with Python and FastAPI, that can be used to serve a deep learning model for image classification trained with Keras (Tensorflow).
+This is an example of REST API, built with Python and FastAPI, that can be used to serve a deep learning model for image classification trained with Keras (Tensorflow).
 The API has two endpoints: 
 
 #### POST  /classifier/predictions
