@@ -26,7 +26,7 @@ It is used to load/change the classification model package and configure the pre
 
 ## Model package
 
-A model package represents the agrupation of several files, consumed by the prediction service for classification. 
+A model package represents a group of several files, consumed by the prediction service for classification. 
 In the model/ directory, there is an example of how a "model package" should be; it consists in:
 * hdf5 model file (<model_name>.hdf5)
 * json configuration file (<model_name>_config.json)
